@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Basketball Timer</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#0d1117;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    text-align:center;
+    background:#161b22;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 0 25px #000;
+    width:320px;
+}
+
+.clock{
+    font-size:60px;
+    font-weight:bold;
+    margin:15px 0;
+}
+
+.shot{
+    font-size:40px;
+    color:#ff4444;
+}
+
+button{
+    margin:5px;
+    padding:10px 18px;
+    font-size:16px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.start{ background:#2ea043; color:white; }
+.pause{ background:#db6d28; color:white; }
+.reset{ background:#da3633; color:white; }
+.blue{ background:#1f6feb; color:white; }
+
+input{
+    width:60px;
+    padding:6px;
+    text-align:center;
+    border-radius:6px;
+    border:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🏀 Basketball Timer</h2>
+
+    <div class="clock" id="gameClock">10:00</div>
+    <div class="shot" id="shotClock">24</div>
+
+    <div>
+        <button class="start" onclick="start()">Start</button>
+        <button class="pause" onclick="pause()">Pause</button>
+        <button class="reset" onclick="reset()">Reset</button>
+    </div>
+
+    <br>
+
+    Minutes:
+    <input type="number" id="minutes" value="10" min="1">
+
+    <br><br>
+
+    <button class="blue" onclick="resetShot(24)">Shot 24</button>
+    <button class="blue" onclick="resetShot(14)">Shot 14</button>
+</div>
+
+<script>
+let gameTime = 600;
+let shotTime = 24;
+
+let gameInterval = null;
+let shotInterval = null;
+
+function format(t){
+    let m = Math.floor(t/60);
+    let s = t%60;
+    return m + ":" + (s<10?"0":"") + s;
+}
+
+function update(){
+    document.getElementById("gameClock").innerText = format(gameTime);
+    document.getElementById("shotClock").innerText = shotTime;
+}
+
+function start(){
+    if(gameInterval) return;
+
+    gameInterval = setInterval(()=>{
+        if(gameTime>0) gameTime--;
+        update();
+    },1000);
+
+    shotInterval = setInterval(()=>{
+        if(shotTime>0) shotTime--;
+        update();
+    },1000);
+}
+
+function pause(){
+    clearInterval(gameInterval);
+    clearInterval(shotInterval);
+    gameInterval = null;
+    shotInterval = null;
+}
+
+function reset(){
+    pause();
+    gameTime = document.getElementById("minutes").value * 60;
+    shotTime = 24;
+    update();
+}
+
+function resetShot(v){
+    shotTime = v;
+    update();
+}
+
+update();
+</script>
+
+</body>
+</html>
